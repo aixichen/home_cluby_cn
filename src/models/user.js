@@ -17,7 +17,11 @@ export default {
       });
     },
     *fetchCurrent(_, { call, put }) {
-      const response = yield call(queryCurrent);
+      const responseTemp = yield call(queryCurrent);
+      const response = responseTemp.data;
+      response.userid = response.id;
+      response.notifyCount = 0;
+
       yield put({
         type: 'saveCurrentUser',
         payload: response,
