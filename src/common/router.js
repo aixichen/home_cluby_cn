@@ -108,6 +108,11 @@ export const getRouterData = app => {
       // name: '工作台',
       // authority: 'admin',
     },
+
+    '/account/out-list': {
+      component: dynamicWrapper(app, ['account'], () => import('../routes/Account/OutList')),
+    },
+
     '/form/basic-form': {
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/BasicForm')),
     },

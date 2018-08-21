@@ -23,6 +23,25 @@ const menuData = [
     ],
   },
   {
+    name: '账务管理',
+    icon: 'table',
+    path: 'account',
+    children: [
+      {
+        name: '支出查询',
+        path: 'out-list',
+      },
+      {
+        name: '收入查询',
+        path: 'basic-list',
+      },
+      {
+        name: '分类查询',
+        path: 'card-list',
+      },
+    ],
+  },
+  {
     name: '表单页',
     icon: 'form',
     path: 'form',
