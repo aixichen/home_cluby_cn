@@ -33,7 +33,7 @@ const menuData = [
       },
       {
         name: '收入查询',
-        path: 'basic-list',
+        path: 'in-list',
       },
       {
         name: '分类查询',

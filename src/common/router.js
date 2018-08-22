@@ -112,6 +112,9 @@ export const getRouterData = app => {
     '/account/out-list': {
       component: dynamicWrapper(app, ['account'], () => import('../routes/Account/OutList')),
     },
+    '/account/in-list': {
+      component: dynamicWrapper(app, ['account'], () => import('../routes/Account/InList')),
+    },
 
     '/form/basic-form': {
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/BasicForm')),

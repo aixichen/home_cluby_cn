@@ -40,7 +40,7 @@ const CreateForm = Form.create()(props => {
   };
   return (
     <Modal
-      title="新建支出"
+      title="新建收入"
       visible={modalVisible}
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
@@ -55,34 +55,24 @@ const CreateForm = Form.create()(props => {
           rules: [{ required: true, message: '请输入金额' }],
         })(<InputNumber placeholder="请输入" min={0} step={1} precision={2} />)}
       </FormItem>
-      <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="支出类型">
+      <Form.Item labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="收入类型">
         {form.getFieldDecorator('amount_type', {
-          rules: [{ required: true, message: '请选择支出类型' }],
+          rules: [{ required: true, message: '请选择收入类型' }],
         })(
           <Select
             showSearch
             style={{ width: 200 }}
-            placeholder="请选择支出类型"
+            placeholder="请选择收入类型"
             filterOption={(input, option) =>
               option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
           >
-            <Option value="1">超市</Option>
-            <Option value="2">买菜</Option>
-            <Option value="3">交通</Option>
-            <Option value="4">零食</Option>
-            <Option value="5">医疗</Option>
-            <Option value="6">家庭餐饮</Option>
-            <Option value="7">狗狗</Option>
-            <Option value="8">头发护理</Option>
-            <Option value="9">生活服务</Option>
-            <Option value="10">彩票</Option>
-            <Option value="11">水果</Option>
-            <Option value="12">房租水电</Option>
-            <Option value="13">电影</Option>
-            <Option value="14">服装</Option>
-            <Option value="15">家用电器-设备</Option>
-            <Option value="16">手机通讯</Option>
+            <Option value="17">工资</Option>
+            <Option value="18">外快收入</Option>
+            <Option value="19">彩票收入</Option>
+            <Option value="20">投资理财</Option>
+            <Option value="21">其他收入</Option>
+            <Option value="22">礼金</Option>
           </Select>
         )}
       </Form.Item>
@@ -118,7 +108,7 @@ export default class OutList extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'account/fetch',
-      payload: { account_type: 2 },
+      payload: { account_type: 1 },
     });
   }
 
@@ -133,7 +123,7 @@ export default class OutList extends PureComponent {
     }, {});
 
     const params = {
-      account_type: 2,
+      account_type: 1,
       currentPage: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
@@ -157,7 +147,7 @@ export default class OutList extends PureComponent {
     });
     dispatch({
       type: 'account/fetch',
-      payload: { account_type: 2 },
+      payload: { account_type: 1 },
     });
   };
 
@@ -222,7 +212,7 @@ export default class OutList extends PureComponent {
       this.setState({
         formValues: values,
       });
-      values.account_type = 2;
+      values.account_type = 1;
       dispatch({
         type: 'account/fetch',
         payload: values,
@@ -239,7 +229,7 @@ export default class OutList extends PureComponent {
   handleAdd = fields => {
     const { dispatch } = this.props;
     const data = fields;
-    data.account_type = 2;
+    data.account_type = 1;
     data.amount_date = moment(data.amount_date).format('YYYY-MM-DD');
     dispatch({
       type: 'account/add',
@@ -268,22 +258,12 @@ export default class OutList extends PureComponent {
             <FormItem label="类型">
               {getFieldDecorator('amount_type')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="1">超市</Option>
-                  <Option value="2">买菜</Option>
-                  <Option value="3">交通</Option>
-                  <Option value="4">零食</Option>
-                  <Option value="5">医疗</Option>
-                  <Option value="6">家庭餐饮</Option>
-                  <Option value="7">狗狗</Option>
-                  <Option value="8">头发护理</Option>
-                  <Option value="9">生活服务</Option>
-                  <Option value="10">彩票</Option>
-                  <Option value="11">水果</Option>
-                  <Option value="12">房租水电</Option>
-                  <Option value="13">电影</Option>
-                  <Option value="14">服装</Option>
-                  <Option value="15">家用电器-设备</Option>
-                  <Option value="16">手机通讯</Option>
+                  <Option value="17">工资</Option>
+                  <Option value="18">外快收入</Option>
+                  <Option value="19">彩票收入</Option>
+                  <Option value="20">投资理财</Option>
+                  <Option value="21">其他收入</Option>
+                  <Option value="22">礼金</Option>
                 </Select>
               )}
             </FormItem>
@@ -291,11 +271,7 @@ export default class OutList extends PureComponent {
           <Col md={6} sm={24}>
             <FormItem label="更新日期">
               {getFieldDecorator('date')(
-                <DatePicker
-                  style={{ width: '100%' }}
-                  placeholder="请输入更新日期"
-                  format="YYYY-MM-D"
-                />
+                <DatePicker style={{ width: '100%' }} placeholder="请输入更新日期" />
               )}
             </FormItem>
           </Col>
