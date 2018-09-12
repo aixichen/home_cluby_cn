@@ -31,21 +31,33 @@ const Yuan = ({ children }) => (
 }))
 export default class Analysis extends Component {
   state = {
-    salesType: 'all',
-    rangePickerValue: getTimeDistance('year'),
+    salesType: '2',
+    rangePickerValue: getTimeDistance('month'),
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
+    const { salesType, rangePickerValue } = this.state;
     dispatch({
       type: 'chart/fetch',
+      payload: {
+        account_type: salesType,
+        start_time: rangePickerValue[0].format('YYYY-MM-DD'),
+        end_time: rangePickerValue[1].format('YYYY-MM-DD'),
+      },
     });
   }
 
   componentWillUnmount() {
     const { dispatch } = this.props;
+    const { salesType, rangePickerValue } = this.state;
     dispatch({
       type: 'chart/clear',
+      payload: {
+        account_type: salesType,
+        start_time: rangePickerValue[0].format('YYYY-MM-DD'),
+        end_time: rangePickerValue[1].format('YYYY-MM-DD'),
+      },
     });
   }
 
@@ -53,27 +65,49 @@ export default class Analysis extends Component {
     this.setState({
       salesType: e.target.value,
     });
+    const { rangePickerValue } = this.state;
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'chart/fetchAmountTypeData',
+      payload: {
+        account_type: e.target.value,
+        start_time: rangePickerValue[0].format('YYYY-MM-DD'),
+        end_time: rangePickerValue[1].format('YYYY-MM-DD'),
+      },
+    });
   };
 
   handleRangePickerChange = rangePickerValue => {
     this.setState({
       rangePickerValue,
     });
-
+    const { salesType } = this.state;
     const { dispatch } = this.props;
     dispatch({
-      type: 'chart/fetchSalesData',
+      type: 'chart/fetchAmountTypeData',
+      payload: {
+        account_type: salesType,
+        start_time: rangePickerValue[0].format('YYYY-MM-DD'),
+        end_time: rangePickerValue[1].format('YYYY-MM-DD'),
+      },
     });
   };
 
   selectDate = type => {
+    const tempRangePickerValue = getTimeDistance(type);
     this.setState({
-      rangePickerValue: getTimeDistance(type),
+      rangePickerValue: tempRangePickerValue,
     });
 
     const { dispatch } = this.props;
+    const { salesType } = this.state;
     dispatch({
-      type: 'chart/fetchSalesData',
+      type: 'chart/fetchAmountTypeData',
+      payload: {
+        account_type: salesType,
+        start_time: tempRangePickerValue[0].format('YYYY-MM-DD'),
+        end_time: tempRangePickerValue[1].format('YYYY-MM-DD'),
+      },
     });
   };
 
@@ -99,18 +133,10 @@ export default class Analysis extends Component {
       visitData2,
 
       searchData,
-
-      salesTypeData,
-      salesTypeDataOnline,
-      salesTypeDataOffline,
+      amountTypeData,
     } = chart;
 
-    const salesPieData =
-      salesType === 'all'
-        ? salesTypeData
-        : salesType === 'online'
-          ? salesTypeDataOnline
-          : salesTypeDataOffline;
+    const salesPieData = amountTypeData;
 
     const menu = (
       <Menu>
@@ -145,7 +171,7 @@ export default class Analysis extends Component {
         </div>
         <RangePicker
           value={rangePickerValue}
-          onChange={this.handleChangeSalesType}
+          onChange={this.handleRangePickerChange}
           style={{ width: 256 }}
         />
       </div>
@@ -200,13 +226,13 @@ export default class Analysis extends Component {
             <ChartCard
               bordered={false}
               title="月总支出额"
-              loading={loading}
+              data={salesPieData}
               action={
                 <Tooltip title="指标说明">
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={() => <Yuan>126560</Yuan>}
+              total={() => <Yuan>126560.333465456</Yuan>}
               footer={<Field label="日均支出" value={`￥${numeral(12423).format('0,0')}`} />}
               contentHeight={46}
             >
@@ -345,8 +371,8 @@ export default class Analysis extends Component {
                   {iconGroup}
                   <div className={styles.salesTypeRadio}>
                     <Radio.Group value={salesType} onChange={this.handleChangeSalesType}>
-                      <Radio.Button value="online">支出</Radio.Button>
-                      <Radio.Button value="offline">收入</Radio.Button>
+                      <Radio.Button value="2">支出</Radio.Button>
+                      <Radio.Button value="1">收入</Radio.Button>
                     </Radio.Group>
                     {salesExtra}
                   </div>
@@ -357,12 +383,14 @@ export default class Analysis extends Component {
               <h4 style={{ marginTop: 8, marginBottom: 32 }}>支出</h4>
               <Pie
                 hasLegend
+                title="销售额"
                 subTitle="支出"
-                total={() => <Yuan>{salesPieData.reduce((pre, now) => now.y + pre, 0)}</Yuan>}
+                total={() => {
+                  salesPieData.reduce((pre, now) => now.y + pre, 0);
+                }}
                 data={salesPieData}
-                valueFormat={value => <Yuan>{value}</Yuan>}
+                valueFormat={value => numeral(value).format('0,0.00')}
                 height={248}
-                lineWidth={4}
               />
             </Card>
           </Col>
