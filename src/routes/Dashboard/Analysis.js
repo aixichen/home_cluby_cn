@@ -386,7 +386,9 @@ export default class Analysis extends Component {
                 title="销售额"
                 subTitle="支出"
                 total={() => {
-                  salesPieData.reduce((pre, now) => now.y + pre, 0);
+                  return numeral(salesPieData.reduce((pre, now) => now.y + pre, 0)).format(
+                    '0,0.00'
+                  );
                 }}
                 data={salesPieData}
                 valueFormat={value => numeral(value).format('0,0.00')}
